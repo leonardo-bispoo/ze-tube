@@ -7,8 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"ze-tube/internal/app/bot/handlers"
-	"ze-tube/internal/infra/database"
+	"ze-tube/internal/config/database"
+	"ze-tube/internal/infra/bot"
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/mdp/qrterminal/v3"
@@ -16,20 +16,20 @@ import (
 )
 
 func main() {
-	deviceStore := database.Connect()
+	deviceStore := database.ConectDevice()
 
 	client := whatsmeow.NewClient(deviceStore, nil)
 
-	handlers := handlers.NewHandlers(client)
+	botHandlers := bot.New(client)
 
-	client.AddEventHandler(handlers.HandleMessages)
+	client.AddEventHandler(botHandlers.HandleMessages)
 
 	if client.Store.ID == nil {
+		qrChan, _ := client.GetQRChannel(context.Background())
+
 		if err := client.Connect(); err != nil {
 			panic(err)
 		}
-
-		qrChan, _ := client.GetQRChannel(context.Background())
 
 		for evt := range qrChan {
 			if evt.Event == "code" {

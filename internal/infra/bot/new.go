@@ -1,17 +1,19 @@
-package handlers
+package bot
 
 import (
 	"ze-tube/internal/app/bot"
+	"ze-tube/internal/domain"
 
 	"go.mau.fi/whatsmeow"
 )
 
 type handler struct {
 	WhatsmeownClient *whatsmeow.Client
+	Service          domain.Services
 }
 
-func NewHandlers(client *whatsmeow.Client) bot.Handlers {
+func New(client *whatsmeow.Client) domain.Bot {
 	return &handler{
-		WhatsmeownClient: client,
+		Service: bot.New(client),
 	}
 }
