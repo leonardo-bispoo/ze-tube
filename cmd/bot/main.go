@@ -6,21 +6,28 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"ze-tube/internal/config/database"
-	"ze-tube/internal/infra/bot"
+
+	infra "ze-tube/internal/infra"
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/mdp/qrterminal/v3"
 	"go.mau.fi/whatsmeow"
+	waLog "go.mau.fi/whatsmeow/util/log"
 )
 
 func main() {
 	deviceStore := database.ConectDevice()
 
-	client := whatsmeow.NewClient(deviceStore, nil)
+	clientLog := waLog.Stdout("Client", "DEBUG", true)
 
-	botHandlers := bot.New(client)
+	client := whatsmeow.NewClient(deviceStore, clientLog)
+
+	now := time.Now()
+
+	botHandlers := infra.NewHandler(client, now)
 
 	client.AddEventHandler(botHandlers.HandleMessages)
 
