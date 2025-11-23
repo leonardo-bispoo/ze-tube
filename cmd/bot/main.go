@@ -8,7 +8,9 @@ import (
 	"syscall"
 	"time"
 
-	"ze-tube/internal/config/database"
+	"ze-tube/internal/config"
+	"ze-tube/internal/config/database/postgres"
+	"ze-tube/internal/config/database/redis"
 
 	infra "ze-tube/internal/infra"
 
@@ -19,7 +21,15 @@ import (
 )
 
 func main() {
-	deviceStore := database.ConectDevice()
+	config := config.LoadEnv()
+
+	ctx := context.Background()
+
+	deviceStore := postgres.ConectDevice(ctx, config.PostgresURL)
+
+	redisStore := redis.Connect(ctx, config.RedisURL)
+
+	defer redisStore.Close()
 
 	clientLog := waLog.Stdout("Client", "DEBUG", true)
 

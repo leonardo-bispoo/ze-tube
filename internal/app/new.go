@@ -1,17 +1,14 @@
-package bot
+package app
 
 import (
+	"ze-tube/internal/app/bot"
 	"ze-tube/internal/domain"
 
 	"go.mau.fi/whatsmeow"
 )
 
-type service struct {
-	WhatsmeownClient *whatsmeow.Client
-}
-
 func New(client *whatsmeow.Client) domain.Services {
-	return &service{
+	return &bot.App{
 		WhatsmeownClient: client,
 	}
 }

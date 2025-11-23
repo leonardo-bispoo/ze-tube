@@ -1,10 +1,18 @@
 package bot
 
-import "go.mau.fi/whatsmeow/types/events"
+import (
+	"go.mau.fi/whatsmeow/types/events"
+)
 
-func (h *handler) HandleMessages(evt any) {
+func (h *Handler) HandleMessages(evt any) {
 	switch event := evt.(type) {
 	case *events.Message:
-		h.Service.HelloMessage(event)
+		if event.Info.IsGroup || event.Info.Timestamp.Before(h.StartTime) {
+			return
+		}
+
+		if event.Info.Sender.User == h.TestUser {
+			h.Service.HelloMessage(event)
+		}
 	}
 }

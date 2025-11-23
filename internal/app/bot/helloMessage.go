@@ -8,10 +8,10 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (s *service) HelloMessage(event *events.Message) {
+func (a *App) HelloMessage(event *events.Message) {
 	ctx := context.Background()
 
-	s.WhatsmeownClient.SendMessage(ctx, event.Info.Chat, &waE2E.Message{
+	a.WhatsmeownClient.SendMessage(ctx, event.Info.Chat, &waE2E.Message{
 		Conversation: proto.String(`Olá! Eu sou o Zé Tube — seu assistente para baixar vídeos e áudios do YouTube 🎧
 
 Envie um link do YouTube e eu baixo pra você rapidinho:

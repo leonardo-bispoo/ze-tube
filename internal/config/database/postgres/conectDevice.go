@@ -1,4 +1,4 @@
-package database
+package postgres
 
 import (
 	"context"
@@ -8,10 +8,8 @@ import (
 	"go.mau.fi/whatsmeow/store/sqlstore"
 )
 
-func ConectDevice() *store.Device {
-	ctx := context.Background()
-
-	container, err := sqlstore.New(ctx, "postgres", "postgres://postgres@localhost:5432/zetube?sslmode=disable", nil)
+func ConectDevice(ctx context.Context, url string) *store.Device {
+	container, err := sqlstore.New(ctx, "postgres", url, nil)
 	if err != nil {
 		panic(err)
 	}
